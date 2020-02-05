@@ -1,7 +1,7 @@
 // @flow
 import OTTProvider from './provider';
-import KalturaPlaybackContext from './response-types/kaltura-playback-context';
-import KalturaAsset from './response-types/kaltura-asset';
+import KontorolPlaybackContext from './response-types/kontorol-playback-context';
+import KontorolAsset from './response-types/kontorol-asset';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -9,7 +9,7 @@ declare var __NAME__: string;
 const NAME = __NAME__ + '-ott';
 const VERSION = __VERSION__;
 
-const ContextType = KalturaPlaybackContext.Type;
-const MediaType = KalturaAsset.Type;
+const ContextType = KontorolPlaybackContext.Type;
+const MediaType = KontorolAsset.Type;
 
 export {OTTProvider as Provider, ContextType, MediaType, NAME, VERSION};

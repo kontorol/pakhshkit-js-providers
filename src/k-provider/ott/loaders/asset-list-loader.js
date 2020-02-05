@@ -2,7 +2,7 @@
 import RequestBuilder from '../../../util/request-builder';
 import OTTConfiguration from '../config';
 import OTTAssetService from '../services/asset-service';
-import KalturaAsset from '../response-types/kaltura-asset';
+import KontorolAsset from '../response-types/kontorol-asset';
 
 export default class OTTAssetListLoader implements ILoader {
   _entries: Array<string>;
@@ -32,7 +32,7 @@ export default class OTTAssetListLoader implements ILoader {
 
   set response(response: any) {
     response.forEach(item => {
-      this._response.playlistItems.entries.push({mediaDataResult: new KalturaAsset(item.data)});
+      this._response.playlistItems.entries.push({mediaDataResult: new KontorolAsset(item.data)});
     });
   }
 
@@ -51,7 +51,7 @@ export default class OTTAssetListLoader implements ILoader {
     const config = OTTConfiguration.get();
     const requests: Array<RequestBuilder> = [];
     params.entries.forEach(entry => {
-      const assetReferenceType = entry.assetReferenceType || KalturaAsset.AssetReferenceType.MEDIA;
+      const assetReferenceType = entry.assetReferenceType || KontorolAsset.AssetReferenceType.MEDIA;
       requests.push(OTTAssetService.get(config.serviceUrl, params.ks, entry.entryId || entry, assetReferenceType));
     });
     return requests;

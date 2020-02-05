@@ -3,15 +3,15 @@ import RequestBuilder from '../../../util/request-builder';
 import OVPBaseEntryService from '../services/base-entry-service';
 import OVPMetadataService from '../services/meta-data-service';
 import OVPConfiguration from '../config';
-import KalturaPlaybackContext from '../response-types/kaltura-playback-context';
-import KalturaMetadataListResponse from '../response-types/kaltura-metadata-list-response';
-import KalturaBaseEntryListResponse from '../response-types/kaltura-base-entry-list-response';
-import KalturaMediaEntry from '../response-types/kaltura-media-entry';
+import KontorolPlaybackContext from '../response-types/kontorol-playback-context';
+import KontorolMetadataListResponse from '../response-types/kontorol-metadata-list-response';
+import KontorolBaseEntryListResponse from '../response-types/kontorol-base-entry-list-response';
+import KontorolMediaEntry from '../response-types/kontorol-media-entry';
 
 type OVPMediaEntryLoaderResponse = {
-  entry: KalturaMediaEntry,
-  playBackContextResult: KalturaPlaybackContext,
-  metadataListResult: KalturaMetadataListResponse
+  entry: KontorolMediaEntry,
+  playBackContextResult: KontorolPlaybackContext,
+  metadataListResult: KontorolMetadataListResponse
 };
 export type {OVPMediaEntryLoaderResponse};
 
@@ -43,10 +43,10 @@ export default class OVPMediaEntryLoader implements ILoader {
   }
 
   set response(response: any) {
-    let mediaEntryResponse: KalturaBaseEntryListResponse = new KalturaBaseEntryListResponse(response[0].data);
+    let mediaEntryResponse: KontorolBaseEntryListResponse = new KontorolBaseEntryListResponse(response[0].data);
     this._response.entry = mediaEntryResponse.entries[0];
-    this._response.playBackContextResult = new KalturaPlaybackContext(response[1].data);
-    this._response.metadataListResult = new KalturaMetadataListResponse(response[2].data);
+    this._response.playBackContextResult = new KontorolPlaybackContext(response[1].data);
+    this._response.metadataListResult = new KontorolMetadataListResponse(response[2].data);
   }
 
   get response(): OVPMediaEntryLoaderResponse {

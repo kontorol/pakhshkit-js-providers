@@ -7,8 +7,8 @@ import OTTSessionLoader from './loaders/session-loader';
 import OTTAssetLoader from './loaders/asset-loader';
 import OTTAssetListLoader from './loaders/asset-list-loader';
 import OTTProviderParser from './provider-parser';
-import KalturaAsset from './response-types/kaltura-asset';
-import KalturaPlaybackContext from './response-types/kaltura-playback-context';
+import KontorolAsset from './response-types/kontorol-asset';
+import KontorolPlaybackContext from './response-types/kontorol-playback-context';
 import MediaEntry from '../../entities/media-entry';
 import Error from '../../util/error/error';
 
@@ -44,9 +44,9 @@ export default class OTTProvider extends BaseProvider<OTTProviderMediaInfoObject
           ks = '{1:result:ks}';
           this._dataLoader.add(OTTSessionLoader, {partnerId: this.partnerId});
         }
-        const contextType = mediaInfo.contextType || KalturaPlaybackContext.Type.PLAYBACK;
-        const mediaType = mediaInfo.mediaType || KalturaAsset.Type.MEDIA;
-        const assetReferenceType = mediaInfo.assetReferenceType || KalturaAsset.AssetReferenceType.MEDIA;
+        const contextType = mediaInfo.contextType || KontorolPlaybackContext.Type.PLAYBACK;
+        const mediaType = mediaInfo.mediaType || KontorolAsset.Type.MEDIA;
+        const assetReferenceType = mediaInfo.assetReferenceType || KontorolAsset.AssetReferenceType.MEDIA;
         const playbackContext = {
           mediaProtocol: mediaInfo.protocol,
           assetFileIds: mediaInfo.fileIds,

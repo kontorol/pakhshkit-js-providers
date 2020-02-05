@@ -1,8 +1,8 @@
 //@flow
 import getLogger from '../../util/logger';
-import KalturaPlaybackSource from './response-types/kaltura-playback-source';
-import KalturaPlaybackContext from './response-types/kaltura-playback-context';
-import KalturaAsset from './response-types/kaltura-asset';
+import KontorolPlaybackSource from './response-types/kontorol-playback-source';
+import KontorolPlaybackContext from './response-types/kontorol-playback-context';
+import KontorolAsset from './response-types/kontorol-asset';
 import MediaEntry from '../../entities/media-entry';
 import Drm from '../../entities/drm';
 import MediaSource from '../../entities/media-source';
@@ -10,30 +10,30 @@ import MediaSources from '../../entities/media-sources';
 import EntryList from '../../entities/entry-list';
 import Bumper from '../../entities/bumper';
 import {SupportedStreamFormat, isProgressiveSource} from '../../entities/media-format';
-import KalturaDrmPlaybackPluginData from '../common/response-types/kaltura-drm-playback-plugin-data';
-import KalturaRuleAction from './response-types/kaltura-rule-action';
-import KalturaAccessControlMessage from '../common/response-types/kaltura-access-control-message';
+import KontorolDrmPlaybackPluginData from '../common/response-types/kontorol-drm-playback-plugin-data';
+import KontorolRuleAction from './response-types/kontorol-rule-action';
+import KontorolAccessControlMessage from '../common/response-types/kontorol-access-control-message';
 import type {OTTAssetLoaderResponse} from './loaders/asset-loader';
-import KalturaBumpersPlaybackPluginData from './response-types/kaltura-bumper-playback-plugin-data';
+import KontorolBumpersPlaybackPluginData from './response-types/kontorol-bumper-playback-plugin-data';
 
-const LIVE_ASST_OBJECT_TYPE: string = 'KalturaLiveAsset';
+const LIVE_ASST_OBJECT_TYPE: string = 'KontorolLiveAsset';
 
 const MediaTypeCombinations: {[mediaType: string]: Object} = {
-  [KalturaAsset.Type.MEDIA]: {
-    [KalturaPlaybackContext.Type.TRAILER]: () => ({type: MediaEntry.Type.VOD}),
-    [KalturaPlaybackContext.Type.PLAYBACK]: mediaAssetData => {
+  [KontorolAsset.Type.MEDIA]: {
+    [KontorolPlaybackContext.Type.TRAILER]: () => ({type: MediaEntry.Type.VOD}),
+    [KontorolPlaybackContext.Type.PLAYBACK]: mediaAssetData => {
       if (parseInt(mediaAssetData.externalIds) > 0 || mediaAssetData.objectType === LIVE_ASST_OBJECT_TYPE) {
         return {type: MediaEntry.Type.LIVE, dvrStatus: 0};
       }
       return {type: MediaEntry.Type.VOD};
     }
   },
-  [KalturaAsset.Type.EPG]: {
-    [KalturaPlaybackContext.Type.CATCHUP]: () => ({type: MediaEntry.Type.VOD}),
-    [KalturaPlaybackContext.Type.START_OVER]: () => ({type: MediaEntry.Type.LIVE, dvrStatus: 1})
+  [KontorolAsset.Type.EPG]: {
+    [KontorolPlaybackContext.Type.CATCHUP]: () => ({type: MediaEntry.Type.VOD}),
+    [KontorolPlaybackContext.Type.START_OVER]: () => ({type: MediaEntry.Type.LIVE, dvrStatus: 1})
   },
-  [KalturaAsset.Type.RECORDING]: {
-    [KalturaPlaybackContext.Type.PLAYBACK]: () => ({type: MediaEntry.Type.VOD})
+  [KontorolAsset.Type.RECORDING]: {
+    [KontorolPlaybackContext.Type.PLAYBACK]: () => ({type: MediaEntry.Type.VOD})
   }
 };
 
@@ -54,13 +54,13 @@ export default class OTTProviderParser {
     OTTProviderParser._fillBaseData(mediaEntry, assetResponse, requestData);
     const playbackContext = assetResponse.playBackContextResult;
     const mediaAsset = assetResponse.mediaDataResult;
-    const kalturaSources = playbackContext.sources;
-    const filteredKalturaSources = OTTProviderParser._filterSourcesByFormats(kalturaSources, requestData.formats);
-    mediaEntry.sources = OTTProviderParser._getParsedSources(filteredKalturaSources);
+    const kontorolSources = playbackContext.sources;
+    const filteredKontorolSources = OTTProviderParser._filterSourcesByFormats(kontorolSources, requestData.formats);
+    mediaEntry.sources = OTTProviderParser._getParsedSources(filteredKontorolSources);
     const typeData = OTTProviderParser._getMediaType(mediaAsset.data, requestData.mediaType, requestData.contextType);
     mediaEntry.type = typeData.type;
     mediaEntry.dvrStatus = typeData.dvrStatus;
-    mediaEntry.duration = Math.max.apply(Math, kalturaSources.map(source => source.duration));
+    mediaEntry.duration = Math.max.apply(Math, kontorolSources.map(source => source.duration));
     return mediaEntry;
   }
 
@@ -96,7 +96,7 @@ export default class OTTProviderParser {
   static getBumper(assetResponse: any): ?Bumper {
     const playbackContext = assetResponse.playBackContextResult;
     const progressiveBumper = playbackContext.plugins.find(
-      bumper => bumper.streamertype === KalturaBumpersPlaybackPluginData.StreamerType.PROGRESSIVE
+      bumper => bumper.streamertype === KontorolBumpersPlaybackPluginData.StreamerType.PROGRESSIVE
     );
     if (progressiveBumper) {
       return new Bumper(progressiveBumper);
@@ -180,31 +180,31 @@ export default class OTTProviderParser {
   }
 
   /**
-   * Filtered the kalturaSources array by device type.
-   * @param {Array<KalturaPlaybackSource>} kalturaSources - The kaltura sources.
+   * Filtered the kontorolSources array by device type.
+   * @param {Array<KontorolPlaybackSource>} kontorolSources - The kontorol sources.
    * @param {Array<string>} formats - Partner device formats.
-   * @returns {Array<KalturaPlaybackSource>} - Filtered kalturaSources array.
+   * @returns {Array<KontorolPlaybackSource>} - Filtered kontorolSources array.
    * @private
    */
-  static _filterSourcesByFormats(kalturaSources: Array<KalturaPlaybackSource>, formats: Array<string>): Array<KalturaPlaybackSource> {
+  static _filterSourcesByFormats(kontorolSources: Array<KontorolPlaybackSource>, formats: Array<string>): Array<KontorolPlaybackSource> {
     if (formats.length > 0) {
-      kalturaSources = kalturaSources.filter(source => formats.includes(source.type));
+      kontorolSources = kontorolSources.filter(source => formats.includes(source.type));
     }
-    return kalturaSources;
+    return kontorolSources;
   }
 
   /**
    * Returns the parsed sources
    * @function _getParsedSources
-   * @param {Array<KalturaPlaybackSource>} kalturaSources - The kaltura sources
+   * @param {Array<KontorolPlaybackSource>} kontorolSources - The kontorol sources
    * @param {Object} playbackContext - The playback context
    * @return {MediaSources} - A media sources
    * @static
    * @private
    */
-  static _getParsedSources(kalturaSources: Array<KalturaPlaybackSource>): MediaSources {
+  static _getParsedSources(kontorolSources: Array<KontorolPlaybackSource>): MediaSources {
     const sources = new MediaSources();
-    const addAdaptiveSource = (source: KalturaPlaybackSource) => {
+    const addAdaptiveSource = (source: KontorolPlaybackSource) => {
       const parsedSource = OTTProviderParser._parseAdaptiveSource(source);
       if (parsedSource) {
         const sourceFormat = SupportedStreamFormat.get(source.format);
@@ -212,12 +212,12 @@ export default class OTTProviderParser {
       }
     };
     const parseAdaptiveSources = () => {
-      kalturaSources.filter(source => !isProgressiveSource(source.format)).forEach(addAdaptiveSource);
+      kontorolSources.filter(source => !isProgressiveSource(source.format)).forEach(addAdaptiveSource);
     };
     const parseProgressiveSources = () => {
-      kalturaSources.filter(source => isProgressiveSource(source.format)).forEach(addAdaptiveSource);
+      kontorolSources.filter(source => isProgressiveSource(source.format)).forEach(addAdaptiveSource);
     };
-    if (kalturaSources && kalturaSources.length > 0) {
+    if (kontorolSources && kontorolSources.length > 0) {
       parseAdaptiveSources();
       parseProgressiveSources();
     }
@@ -227,31 +227,31 @@ export default class OTTProviderParser {
   /**
    * Returns a parsed adaptive source
    * @function _parseAdaptiveSource
-   * @param {KalturaPlaybackSource} kalturaSource - A kaltura source
-   * @returns {?MediaSource} - The parsed adaptive kalturaSource
+   * @param {KontorolPlaybackSource} kontorolSource - A kontorol source
+   * @returns {?MediaSource} - The parsed adaptive kontorolSource
    * @static
    * @private
    */
-  static _parseAdaptiveSource(kalturaSource: ?KalturaPlaybackSource): ?MediaSource {
+  static _parseAdaptiveSource(kontorolSource: ?KontorolPlaybackSource): ?MediaSource {
     const mediaSource = new MediaSource();
-    if (kalturaSource) {
-      const playUrl = kalturaSource.url;
-      const mediaFormat = SupportedStreamFormat.get(kalturaSource.format);
+    if (kontorolSource) {
+      const playUrl = kontorolSource.url;
+      const mediaFormat = SupportedStreamFormat.get(kontorolSource.format);
       if (mediaFormat) {
         mediaSource.mimetype = mediaFormat.mimeType;
       }
       if (!playUrl) {
         OTTProviderParser._logger.error(
-          `failed to create play url from source, discarding source: (${kalturaSource.fileId}), ${kalturaSource.format}.`
+          `failed to create play url from source, discarding source: (${kontorolSource.fileId}), ${kontorolSource.format}.`
         );
         return null;
       }
       mediaSource.url = playUrl;
-      mediaSource.id = kalturaSource.fileId + ',' + kalturaSource.format;
-      if (kalturaSource.hasDrmData()) {
+      mediaSource.id = kontorolSource.fileId + ',' + kontorolSource.format;
+      if (kontorolSource.hasDrmData()) {
         const drmParams: Array<Drm> = [];
-        kalturaSource.drm.forEach(drm => {
-          drmParams.push(new Drm(drm.licenseURL, KalturaDrmPlaybackPluginData.Scheme[drm.scheme], drm.certificate));
+        kontorolSource.drm.forEach(drm => {
+          drmParams.push(new Drm(drm.licenseURL, KontorolDrmPlaybackPluginData.Scheme[drm.scheme], drm.certificate));
         });
         mediaSource.drmData = drmParams;
       }
@@ -263,11 +263,11 @@ export default class OTTProviderParser {
     return response.playBackContextResult.hasBlockAction();
   }
 
-  static getBlockAction(response): ?KalturaRuleAction {
+  static getBlockAction(response): ?KontorolRuleAction {
     return response.playBackContextResult.getBlockAction();
   }
 
-  static getErrorMessages(response: OTTAssetLoaderResponse): Array<KalturaAccessControlMessage> {
+  static getErrorMessages(response: OTTAssetLoaderResponse): Array<KontorolAccessControlMessage> {
     return response.playBackContextResult.getErrorMessages();
   }
 }

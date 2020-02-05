@@ -1,13 +1,13 @@
 //@flow
 import ServiceResult from '../../common/base-service-result';
-import KalturaMediaEntry from './kaltura-media-entry';
+import KontorolMediaEntry from './kontorol-media-entry';
 
-export default class KalturaMediaEntries extends ServiceResult {
+export default class KontorolMediaEntries extends ServiceResult {
   /**
    * @member - The entries
-   * @type {Array<KalturaMediaEntry>}
+   * @type {Array<KontorolMediaEntry>}
    */
-  entries: Array<KalturaMediaEntry>;
+  entries: Array<KontorolMediaEntry>;
 
   /**
    * @constructor
@@ -17,7 +17,7 @@ export default class KalturaMediaEntries extends ServiceResult {
     super(responseObj);
     if (!this.hasError) {
       this.entries = [];
-      responseObj.map(entry => this.entries.push(new KalturaMediaEntry(entry)));
+      responseObj.map(entry => this.entries.push(new KontorolMediaEntry(entry)));
     }
   }
 }

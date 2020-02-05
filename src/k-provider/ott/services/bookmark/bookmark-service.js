@@ -24,7 +24,7 @@ export default class OTTBookmarkService extends OTTService {
     request.method = 'POST';
     request.url = request.getUrl(serviceUrl);
     const playerData: Object = {
-      objectType: 'KalturaBookmarkPlayerData',
+      objectType: 'KontorolBookmarkPlayerData',
       action: bookmark.playerData.action,
       averageBitrate: bookmark.playerData.averageBitrate,
       totalBitrate: bookmark.playerData.totalBitrate,
@@ -32,7 +32,7 @@ export default class OTTBookmarkService extends OTTService {
       fileId: bookmark.playerData.fileId
     };
     const bookmarkServiceParams: Object = {
-      objectType: 'KalturaBookmark',
+      objectType: 'KontorolBookmark',
       type: bookmark.type,
       id: bookmark.id,
       position: bookmark.position,

@@ -2,10 +2,10 @@
 import OTTAssetService from '../services/asset-service';
 import OTTConfiguration from '../config';
 import RequestBuilder from '../../../util/request-builder';
-import KalturaPlaybackContext from '../response-types/kaltura-playback-context';
-import KalturaAsset from '../response-types/kaltura-asset';
+import KontorolPlaybackContext from '../response-types/kontorol-playback-context';
+import KontorolAsset from '../response-types/kontorol-asset';
 
-type OTTAssetLoaderResponse = {mediaDataResult: KalturaAsset, playBackContextResult: KalturaPlaybackContext};
+type OTTAssetLoaderResponse = {mediaDataResult: KontorolAsset, playBackContextResult: KontorolPlaybackContext};
 export type {OTTAssetLoaderResponse};
 
 export default class OTTAssetLoader implements ILoader {
@@ -35,8 +35,8 @@ export default class OTTAssetLoader implements ILoader {
   }
 
   set response(response: any) {
-    this._response.mediaDataResult = new KalturaAsset(response[0].data);
-    this._response.playBackContextResult = new KalturaPlaybackContext(response[1].data);
+    this._response.mediaDataResult = new KontorolAsset(response[0].data);
+    this._response.playBackContextResult = new KontorolPlaybackContext(response[1].data);
   }
 
   get response(): OTTAssetLoaderResponse {

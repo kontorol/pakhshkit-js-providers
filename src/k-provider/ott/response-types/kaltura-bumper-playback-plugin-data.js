@@ -1,5 +1,5 @@
 //@flow
-export default class KalturaBumpersPlaybackPluginData {
+export default class KontorolBumpersPlaybackPluginData {
   static StreamerType: {[type: string]: string} = {
     HLS: 'hls',
     DASH: 'dash',
