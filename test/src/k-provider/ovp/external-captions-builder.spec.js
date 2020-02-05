@@ -7,7 +7,7 @@ describe('external captions parser', function() {
       label: 'Eng',
       language: 'English',
       languageCode: 'EN',
-      objectType: 'KalturaCaptionPlaybackPluginData',
+      objectType: 'KontorolCaptionPlaybackPluginData',
       url: 'regularUrl',
       webVttUrl: 'webVttUrl'
     },
@@ -16,7 +16,7 @@ describe('external captions parser', function() {
       label: 'FRA',
       language: 'FRENCH',
       languageCode: 'FR',
-      objectType: 'KalturaCaptionPlaybackPluginData',
+      objectType: 'KontorolCaptionPlaybackPluginData',
       url: 'regularUrl',
       webVttUrl: 'webVttUrl'
     },
@@ -25,7 +25,7 @@ describe('external captions parser', function() {
       label: 'RUS',
       language: 'Russian',
       languageCode: 'RU',
-      objectType: 'KalturaCaptionPlaybackPluginData',
+      objectType: 'KontorolCaptionPlaybackPluginData',
       url: 'regularUrl',
       webVttUrl: 'webVttUrl'
     }

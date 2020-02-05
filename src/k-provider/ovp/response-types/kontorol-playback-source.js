@@ -1,9 +1,9 @@
 //@flow
-import KalturaDrmPlaybackPluginData from '../../common/response-types/kaltura-drm-playback-plugin-data';
+import KontorolDrmPlaybackPluginData from '../../common/response-types/kontorol-drm-playback-plugin-data';
 
-export type OVPKalturaPlaybackSource = KalturaPlaybackSource;
+export type OVPKontorolPlaybackSource = KontorolPlaybackSource;
 
-export default class KalturaPlaybackSource {
+export default class KontorolPlaybackSource {
   /**
    * @member - source format according to delivery profile streamer type (applehttp, mpegdash etc.)
    * @type {string}
@@ -31,9 +31,9 @@ export default class KalturaPlaybackSource {
   flavorIds: string;
   /**
    * @member - drm data object containing relevant license url ,scheme name and certificate
-   * @type {Array<KalturaDrmPlaybackPluginData>}
+   * @type {Array<KontorolDrmPlaybackPluginData>}
    */
-  drm: Array<KalturaDrmPlaybackPluginData> = [];
+  drm: Array<KontorolDrmPlaybackPluginData> = [];
 
   /**
    * @constructor
@@ -46,7 +46,7 @@ export default class KalturaPlaybackSource {
     this.protocols = source.protocols;
     this.flavorIds = source.flavorIds;
     if (source.drm) {
-      source.drm.map(drm => this.drm.push(new KalturaDrmPlaybackPluginData(drm)));
+      source.drm.map(drm => this.drm.push(new KontorolDrmPlaybackPluginData(drm)));
     }
   }
 

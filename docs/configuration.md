@@ -8,7 +8,7 @@ Configuration parameters are provided upon instantiation of the provider instanc
 var config = {
   // Configuration here
 };
-var provider = new playkit.providers.ovp.Provider(config);
+var provider = new pakhshkit.providers.ovp.Provider(config);
 ```
 
 #### Cloud TV
@@ -17,7 +17,7 @@ var provider = new playkit.providers.ovp.Provider(config);
 var config = {
   // Configuration here
 };
-var provider = new playkit.providers.ott.Provider(config);
+var provider = new pakhshkit.providers.ott.Provider(config);
 ```
 
 ### Configuration Structure
@@ -106,8 +106,8 @@ var provider = new playkit.providers.ott.Provider(config);
 >
 > ```js
 > {
->  serviceUrl: "//www.kaltura.com/api_v3",
->  cdnUrl: "//cdnapisec.kaltura.com",
+>  serviceUrl: "//www.kontorol.com/api_v3",
+>  cdnUrl: "//cdnapisec.kontorol.com",
 >  useApiCaptions: true
 > }
 > ```
@@ -116,8 +116,8 @@ var provider = new playkit.providers.ott.Provider(config);
 >
 > ```js
 > {
->  serviceUrl: "//api-preprod.ott.kaltura.com/v4_6/api_v3",
->  cdnUrl: "//api-preprod.ott.kaltura.com/v4_7"
+>  serviceUrl: "//api-preprod.ott.kontorol.com/v4_6/api_v3",
+>  cdnUrl: "//api-preprod.ott.kontorol.com/v4_7"
 > }
 > ```
 >

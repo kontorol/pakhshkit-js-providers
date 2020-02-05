@@ -2,7 +2,7 @@
 import RequestBuilder from '../../../util/request-builder';
 import OVPConfiguration from '../config';
 import OVPBaseEntryService from '../services/base-entry-service';
-import KalturaBaseEntryListResponse from '../response-types/kaltura-base-entry-list-response';
+import KontorolBaseEntryListResponse from '../response-types/kontorol-base-entry-list-response';
 
 export default class OVPEntryListLoader implements ILoader {
   _entries: Array<string>;
@@ -31,9 +31,9 @@ export default class OVPEntryListLoader implements ILoader {
   }
 
   set response(response: any) {
-    let mediaEntryResponse: KalturaBaseEntryListResponse;
+    let mediaEntryResponse: KontorolBaseEntryListResponse;
     response.forEach(item => {
-      mediaEntryResponse = new KalturaBaseEntryListResponse(item.data);
+      mediaEntryResponse = new KontorolBaseEntryListResponse(item.data);
       this._response.playlistItems.entries.push(mediaEntryResponse.entries[0]);
     });
   }

@@ -1,7 +1,7 @@
 //@flow
-import KalturaRuleAction from './kaltura-rule-action';
+import KontorolRuleAction from './kontorol-rule-action';
 
-export default class KalturaAccessControlModifyRequestHostRegexAction extends KalturaRuleAction {
+export default class KontorolAccessControlModifyRequestHostRegexAction extends KontorolRuleAction {
   /**
    * @member - Request host regex pattern
    * @type {string}

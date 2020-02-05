@@ -2,8 +2,8 @@
 import RequestBuilder from '../../../util/request-builder';
 import OVPPlaylistService from '../services/playlist-service';
 import OVPConfiguration from '../config';
-import KalturaPlaylist from '../response-types/kaltura-playlist';
-import KalturaMediaEntries from '../response-types/kaltura-media-entries';
+import KontorolPlaylist from '../response-types/kontorol-playlist';
+import KontorolMediaEntries from '../response-types/kontorol-media-entries';
 
 export default class OVPPlaylistLoader implements ILoader {
   _playlistId: string;
@@ -32,8 +32,8 @@ export default class OVPPlaylistLoader implements ILoader {
   }
 
   set response(response: any) {
-    this._response.playlistData = new KalturaPlaylist(response[0].data);
-    this._response.playlistItems = new KalturaMediaEntries(response[1].data);
+    this._response.playlistData = new KontorolPlaylist(response[0].data);
+    this._response.playlistItems = new KontorolMediaEntries(response[1].data);
   }
 
   get response(): any {

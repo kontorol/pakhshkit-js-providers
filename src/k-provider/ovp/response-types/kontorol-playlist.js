@@ -1,6 +1,6 @@
 //@flow
 
-export default class KalturaPlaylist {
+export default class KontorolPlaylist {
   /**
    * @member - playlist id
    * @type {string}
