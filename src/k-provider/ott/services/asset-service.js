@@ -24,7 +24,7 @@ export default class OTTAssetService extends OTTService {
     request.action = "getPlaybackContext";
     request.method = "POST";
     request.url = request.getUrl(serviceUrl);
-    const contextDataParams: Object = {objectType: "KalturaPlaybackContextOptions"};
+    const contextDataParams: Object = {objectType: "KontorolPlaybackContextOptions"};
     Object.assign(contextDataParams, playbackContextOptions);
     request.params = {assetId: assetId, assetType: type, contextDataParams: contextDataParams, ks: ks};
     return request;

@@ -1,34 +1,34 @@
 //@flow
 import getLogger from '../../util/logger'
-import KalturaPlaybackSource from './response-types/kaltura-playback-source'
-import KalturaPlaybackContext from './response-types/kaltura-playback-context'
-import KalturaAsset from './response-types/kaltura-asset'
+import KontorolPlaybackSource from './response-types/kontorol-playback-source'
+import KontorolPlaybackContext from './response-types/kontorol-playback-context'
+import KontorolAsset from './response-types/kontorol-asset'
 import MediaEntry from '../../entities/media-entry'
 import Drm from '../../entities/drm'
 import MediaSource from '../../entities/media-source'
 import MediaSources from '../../entities/media-sources'
 import {SupportedStreamFormat} from '../../entities/media-format'
-import KalturaDrmPlaybackPluginData from '../common/response-types/kaltura-drm-playback-plugin-data'
+import KontorolDrmPlaybackPluginData from '../common/response-types/kontorol-drm-playback-plugin-data'
 import BaseProviderParser from '../common/base-provider-parser'
 
-const LIVE_ASST_OBJECT_TYPE: string = "KalturaLinearMediaAsset";
+const LIVE_ASST_OBJECT_TYPE: string = "KontorolLinearMediaAsset";
 
 const MediaTypeCombinations: { [mediaType: string]: Object } = {
-  [KalturaAsset.Type.MEDIA]: {
-    [KalturaPlaybackContext.Type.TRAILER]: () => ({type: MediaEntry.Type.VOD}),
-    [KalturaPlaybackContext.Type.PLAYBACK]: (mediaAssetData) => {
+  [KontorolAsset.Type.MEDIA]: {
+    [KontorolPlaybackContext.Type.TRAILER]: () => ({type: MediaEntry.Type.VOD}),
+    [KontorolPlaybackContext.Type.PLAYBACK]: (mediaAssetData) => {
       if (mediaAssetData.externalIds || mediaAssetData.objectType === LIVE_ASST_OBJECT_TYPE) {
         return {type: MediaEntry.Type.LIVE, dvrStatus: 0};
       }
       return {type: MediaEntry.Type.VOD};
     }
   },
-  [KalturaAsset.Type.EPG]: {
-    [KalturaPlaybackContext.Type.CATCHUP]: () => ({type: MediaEntry.Type.VOD}),
-    [KalturaPlaybackContext.Type.START_OVER]: () => ({type: MediaEntry.Type.LIVE, dvrStatus: 1})
+  [KontorolAsset.Type.EPG]: {
+    [KontorolPlaybackContext.Type.CATCHUP]: () => ({type: MediaEntry.Type.VOD}),
+    [KontorolPlaybackContext.Type.START_OVER]: () => ({type: MediaEntry.Type.LIVE, dvrStatus: 1})
   },
-  [KalturaAsset.Type.RECORDING]: {
-    [KalturaPlaybackContext.Type.PLAYBACK]: () => ({type: MediaEntry.Type.VOD})
+  [KontorolAsset.Type.RECORDING]: {
+    [KontorolPlaybackContext.Type.PLAYBACK]: () => ({type: MediaEntry.Type.VOD})
   }
 };
 
@@ -48,19 +48,19 @@ export default class OTTProviderParser extends BaseProviderParser {
     const mediaEntry = new MediaEntry();
     const playbackContext = assetResponse.playBackContextResult;
     const mediaAsset = assetResponse.mediaDataResult;
-    const kalturaSources = playbackContext.sources;
+    const kontorolSources = playbackContext.sources;
     const metaData = OTTProviderParser.reconstructMetadata(mediaAsset);
     metaData.description = mediaAsset.description;
     metaData.name = mediaAsset.name;
     mediaEntry.metadata = metaData;
     mediaEntry.poster = OTTProviderParser._getPoster(mediaAsset.pictures);
     mediaEntry.id = mediaAsset.id;
-    const filteredKalturaSources = OTTProviderParser._filterSourcesByFormats(kalturaSources, requestData.formats);
-    mediaEntry.sources = OTTProviderParser._getParsedSources(filteredKalturaSources);
+    const filteredKontorolSources = OTTProviderParser._filterSourcesByFormats(kontorolSources, requestData.formats);
+    mediaEntry.sources = OTTProviderParser._getParsedSources(filteredKontorolSources);
     const typeData = OTTProviderParser._getMediaType(mediaAsset.data, requestData.mediaType, requestData.contextType);
     mediaEntry.type = typeData.type;
     mediaEntry.dvrStatus = typeData.dvrStatus;
-    mediaEntry.duration = Math.max.apply(Math, kalturaSources.map(source => source.duration));
+    mediaEntry.duration = Math.max.apply(Math, kontorolSources.map(source => source.duration));
     return mediaEntry;
   }
 
@@ -129,42 +129,42 @@ export default class OTTProviderParser extends BaseProviderParser {
   }
 
   /**
-   * Filtered the kalturaSources array by device type.
-   * @param {Array<KalturaPlaybackSource>} kalturaSources - The kaltura sources.
+   * Filtered the kontorolSources array by device type.
+   * @param {Array<KontorolPlaybackSource>} kontorolSources - The kontorol sources.
    * @param {Array<string>} formats - Partner device formats.
-   * @returns {Array<KalturaPlaybackSource>} - Filtered kalturaSources array.
+   * @returns {Array<KontorolPlaybackSource>} - Filtered kontorolSources array.
    * @private
    */
-  static _filterSourcesByFormats(kalturaSources: Array<KalturaPlaybackSource>, formats: Array<string>): Array<KalturaPlaybackSource> {
+  static _filterSourcesByFormats(kontorolSources: Array<KontorolPlaybackSource>, formats: Array<string>): Array<KontorolPlaybackSource> {
     if (formats.length > 0) {
-      kalturaSources = kalturaSources.filter(source => formats.includes(source.type));
+      kontorolSources = kontorolSources.filter(source => formats.includes(source.type));
     }
-    return kalturaSources;
+    return kontorolSources;
   }
 
   /**
    * Returns the parsed sources
    * @function _getParsedSources
-   * @param {Array<KalturaPlaybackSource>} kalturaSources - The kaltura sources
+   * @param {Array<KontorolPlaybackSource>} kontorolSources - The kontorol sources
    * @param {Object} playbackContext - The playback context
    * @return {MediaSources} - A media sources
    * @static
    * @private
    */
-  static _getParsedSources(kalturaSources: Array<KalturaPlaybackSource>): MediaSources {
+  static _getParsedSources(kontorolSources: Array<KontorolPlaybackSource>): MediaSources {
     const sources = new MediaSources();
-    const addAdaptiveSource = (source: KalturaPlaybackSource) => {
+    const addAdaptiveSource = (source: KontorolPlaybackSource) => {
       const parsedSource = OTTProviderParser._parseAdaptiveSource(source);
       const sourceFormat = SupportedStreamFormat.get(source.format);
       sources.map(parsedSource, sourceFormat);
     };
     const parseAdaptiveSources = () => {
-      kalturaSources.filter((source) => !OTTProviderParser._isProgressiveSource(source)).forEach(addAdaptiveSource);
+      kontorolSources.filter((source) => !OTTProviderParser._isProgressiveSource(source)).forEach(addAdaptiveSource);
     };
     const parseProgressiveSources = () => {
-      kalturaSources.filter((source) => OTTProviderParser._isProgressiveSource(source)).forEach(addAdaptiveSource);
+      kontorolSources.filter((source) => OTTProviderParser._isProgressiveSource(source)).forEach(addAdaptiveSource);
     };
-    if (kalturaSources && kalturaSources.length > 0) {
+    if (kontorolSources && kontorolSources.length > 0) {
       parseAdaptiveSources();
       parseProgressiveSources();
     }
@@ -174,29 +174,29 @@ export default class OTTProviderParser extends BaseProviderParser {
   /**
    * Returns a parsed adaptive source
    * @function _parseAdaptiveSource
-   * @param {KalturaPlaybackSource} kalturaSource - A kaltura source
-   * @returns {MediaSource} - The parsed adaptive kalturaSource
+   * @param {KontorolPlaybackSource} kontorolSource - A kontorol source
+   * @returns {MediaSource} - The parsed adaptive kontorolSource
    * @static
    * @private
    */
-  static _parseAdaptiveSource(kalturaSource: ?KalturaPlaybackSource): MediaSource {
+  static _parseAdaptiveSource(kontorolSource: ?KontorolPlaybackSource): MediaSource {
     const mediaSource = new MediaSource();
-    if (kalturaSource) {
-      const playUrl = kalturaSource.url;
-      const mediaFormat = SupportedStreamFormat.get(kalturaSource.format);
+    if (kontorolSource) {
+      const playUrl = kontorolSource.url;
+      const mediaFormat = SupportedStreamFormat.get(kontorolSource.format);
       if (mediaFormat) {
         mediaSource.mimetype = mediaFormat.mimeType;
       }
       if (playUrl === '') {
-        OTTProviderParser._logger.error(`failed to create play url from source, discarding source: (${kalturaSource.fileId}), ${kalturaSource.format}.`);
+        OTTProviderParser._logger.error(`failed to create play url from source, discarding source: (${kontorolSource.fileId}), ${kontorolSource.format}.`);
         return mediaSource;
       }
       mediaSource.url = playUrl;
-      mediaSource.id = kalturaSource.fileId + ',' + kalturaSource.format;
-      if (kalturaSource.hasDrmData()) {
+      mediaSource.id = kontorolSource.fileId + ',' + kontorolSource.format;
+      if (kontorolSource.hasDrmData()) {
         const drmParams: Array<Drm> = [];
-        kalturaSource.drm.forEach((drm) => {
-          drmParams.push(new Drm(drm.licenseURL, KalturaDrmPlaybackPluginData.Scheme[drm.scheme], drm.certificate));
+        kontorolSource.drm.forEach((drm) => {
+          drmParams.push(new Drm(drm.licenseURL, KontorolDrmPlaybackPluginData.Scheme[drm.scheme], drm.certificate));
         });
         mediaSource.drmData = drmParams;
       }

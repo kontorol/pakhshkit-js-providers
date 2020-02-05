@@ -1,8 +1,8 @@
 //@flow
 import ServiceResult from '../../common/base-service-result'
-import KalturaMediaEntry from './kaltura-media-entry'
+import KontorolMediaEntry from './kontorol-media-entry'
 
-export default class KalturaBaseEntryListResponse extends ServiceResult {
+export default class KontorolBaseEntryListResponse extends ServiceResult {
   /**
    * @member - The total count
    * @type {number}
@@ -10,9 +10,9 @@ export default class KalturaBaseEntryListResponse extends ServiceResult {
   totalCount: number;
   /**
    * @member - The entries
-   * @type {Array<KalturaMediaEntry>}
+   * @type {Array<KontorolMediaEntry>}
    */
-  entries: Array<KalturaMediaEntry>;
+  entries: Array<KontorolMediaEntry>;
 
   /**
    * @constructor
@@ -24,7 +24,7 @@ export default class KalturaBaseEntryListResponse extends ServiceResult {
       this.totalCount = responseObj.totalCount;
       if (this.totalCount > 0) {
         this.entries = [];
-        responseObj.objects.map(entry => this.entries.push(new KalturaMediaEntry(entry)));
+        responseObj.objects.map(entry => this.entries.push(new KontorolMediaEntry(entry)));
       }
     }
   }

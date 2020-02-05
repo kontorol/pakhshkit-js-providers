@@ -1,10 +1,10 @@
 //@flow
 import ServiceResult from '../../common/base-service-result'
-import KalturaMetadata from './kaltura-metadata'
+import KontorolMetadata from './kontorol-metadata'
 
-export default class KalturaMetadataListResponse extends ServiceResult {
+export default class KontorolMetadataListResponse extends ServiceResult {
   totalCount: number;
-  metas: Array<KalturaMetadata>;
+  metas: Array<KontorolMetadata>;
 
   /**
    * @constructor
@@ -16,7 +16,7 @@ export default class KalturaMetadataListResponse extends ServiceResult {
       this.totalCount = responseObj.totalCount;
       if (this.totalCount > 0) {
         this.metas = [];
-        responseObj.objects.map(meta => this.metas.push(new KalturaMetadata(meta)));
+        responseObj.objects.map(meta => this.metas.push(new KontorolMetadata(meta)));
       }
     }
   }
