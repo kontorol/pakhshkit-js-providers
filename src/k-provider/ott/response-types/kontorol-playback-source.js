@@ -1,12 +1,12 @@
 //@flow
-import KalturaDrmPlaybackPluginData from '../../common/response-types/kaltura-drm-playback-plugin-data'
+import KontorolDrmPlaybackPluginData from '../../common/response-types/kontorol-drm-playback-plugin-data'
 
-export type OTTKalturaPlaybackSource = KalturaPlaybackSource;
+export type OTTKontorolPlaybackSource = KontorolPlaybackSource;
 
-export default class KalturaPlaybackSource {
+export default class KontorolPlaybackSource {
   format: string;
   protocols: string;
-  drm: Array<KalturaDrmPlaybackPluginData> = [];
+  drm: Array<KontorolDrmPlaybackPluginData> = [];
   adsPolicy: string;
   adsParam: string;
   duration: number;
@@ -28,7 +28,7 @@ export default class KalturaPlaybackSource {
     this.fileId = source.id;
     this.protocols = source.protocols;
     if (source.drm) {
-      source.drm.map(drm => this.drm.push(new KalturaDrmPlaybackPluginData(drm)));
+      source.drm.map(drm => this.drm.push(new KontorolDrmPlaybackPluginData(drm)));
     }
   }
 

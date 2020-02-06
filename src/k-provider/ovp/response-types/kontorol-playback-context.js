@@ -1,31 +1,31 @@
 //@flow
 import ServiceResult from '../../common/base-service-result'
-import KalturaAccessControlMessage from '../../common/response-types/kaltura-access-control-message'
-import KalturaPlaybackSource from './kaltura-playback-source'
-import KalturaRuleAction from '../../common/response-types/kaltura-rule-action'
-import KalturaFlavorAsset from './kaltura-flavor-asset'
+import KontorolAccessControlMessage from '../../common/response-types/kontorol-access-control-message'
+import KontorolPlaybackSource from './kontorol-playback-source'
+import KontorolRuleAction from '../../common/response-types/kontorol-rule-action'
+import KontorolFlavorAsset from './kontorol-flavor-asset'
 
-export default class KalturaPlaybackContext extends ServiceResult {
+export default class KontorolPlaybackContext extends ServiceResult {
   /**
    * @member - The playback sources
-   * @type {Array<KalturaPlaybackSource>}
+   * @type {Array<KontorolPlaybackSource>}
    */
-  sources: Array<KalturaPlaybackSource> = [];
+  sources: Array<KontorolPlaybackSource> = [];
   /**
    * @member - Array of actions as received from the rules that invalidated
-   * @type {Array<KalturaRuleAction>}
+   * @type {Array<KontorolRuleAction>}
    */
-  actions: Array<KalturaRuleAction> = [];
+  actions: Array<KontorolRuleAction> = [];
   /**
    * @member - Array of actions as received from the rules that invalidated
-   * @type {Array<KalturaAccessControlMessage>}
+   * @type {Array<KontorolAccessControlMessage>}
    */
-  messages: Array<KalturaAccessControlMessage> = [];
+  messages: Array<KontorolAccessControlMessage> = [];
   /**
    * @member - The flavor assets
-   * @type {Array<KalturaFlavorAsset>}
+   * @type {Array<KontorolFlavorAsset>}
    */
-  flavorAssets: Array<KalturaFlavorAsset> = [];
+  flavorAssets: Array<KontorolFlavorAsset> = [];
 
   /**
    * @constructor
@@ -36,19 +36,19 @@ export default class KalturaPlaybackContext extends ServiceResult {
     if (!this.hasError) {
       const messages = response.messages;
       if (messages) {
-        messages.map(message => this.messages.push(new KalturaAccessControlMessage(message)));
+        messages.map(message => this.messages.push(new KontorolAccessControlMessage(message)));
       }
       const actions = response.actions;
       if (actions) {
-        actions.map(action => this.actions.push(new KalturaRuleAction(action)));
+        actions.map(action => this.actions.push(new KontorolRuleAction(action)));
       }
       const sources = response.sources;
       if (sources) {
-        sources.map(source => this.sources.push(new KalturaPlaybackSource(source)));
+        sources.map(source => this.sources.push(new KontorolPlaybackSource(source)));
       }
       const flavorAssets = response.flavorAssets;
       if (flavorAssets) {
-        flavorAssets.map(flavor => this.flavorAssets.push(new KalturaFlavorAsset(flavor)));
+        flavorAssets.map(flavor => this.flavorAssets.push(new KontorolFlavorAsset(flavor)));
       }
     }
   }

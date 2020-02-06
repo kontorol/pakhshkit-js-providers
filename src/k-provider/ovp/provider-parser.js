@@ -1,9 +1,9 @@
 //@flow
-import KalturaFlavorAsset from './response-types/kaltura-flavor-asset'
-import KalturaMetadataListResponse from './response-types/kaltura-metadata-list-response'
-import KalturaMediaEntry from './response-types/kaltura-media-entry'
-import KalturaPlaybackSource from './response-types/kaltura-playback-source'
-import KalturaDrmPlaybackPluginData from '../common/response-types/kaltura-drm-playback-plugin-data'
+import KontorolFlavorAsset from './response-types/kontorol-flavor-asset'
+import KontorolMetadataListResponse from './response-types/kontorol-metadata-list-response'
+import KontorolMediaEntry from './response-types/kontorol-media-entry'
+import KontorolPlaybackSource from './response-types/kontorol-playback-source'
+import KontorolDrmPlaybackPluginData from '../common/response-types/kontorol-drm-playback-plugin-data'
 import PlaySourceUrlBuilder from './play-source-url-builder'
 import XmlParser from '../../util/xml-parser'
 import getLogger from '../../util/logger'
@@ -34,9 +34,9 @@ export default class OVPProviderParser extends BaseProviderParser {
     const entry = mediaEntryResponse.entry;
     const playbackContext = mediaEntryResponse.playBackContextResult;
     const metadataList = mediaEntryResponse.metadataListResult;
-    const kalturaSources = playbackContext.sources;
+    const kontorolSources = playbackContext.sources;
 
-    mediaEntry.sources = OVPProviderParser._getParsedSources(kalturaSources, ks, partnerId, uiConfId, entry, playbackContext);
+    mediaEntry.sources = OVPProviderParser._getParsedSources(kontorolSources, ks, partnerId, uiConfId, entry, playbackContext);
     mediaEntry.poster = entry.poster;
     mediaEntry.id = entry.id;
     mediaEntry.duration = entry.duration;
@@ -56,19 +56,19 @@ export default class OVPProviderParser extends BaseProviderParser {
   static _getEntryType(entryTypeEnum: number, typeEnum: number | string): string {
     let type = MediaEntry.Type.UNKNOWN;
     switch (entryTypeEnum) {
-      case KalturaMediaEntry.MediaType.IMAGE.value:
+      case KontorolMediaEntry.MediaType.IMAGE.value:
         type = MediaEntry.Type.IMAGE;
         break;
-      case KalturaMediaEntry.MediaType.AUDIO.value:
+      case KontorolMediaEntry.MediaType.AUDIO.value:
         type = MediaEntry.Type.AUDIO;
         break;
       default:
         switch (typeEnum) {
-          case KalturaMediaEntry.EntryType.MEDIA_CLIP.value:
+          case KontorolMediaEntry.EntryType.MEDIA_CLIP.value:
             type = MediaEntry.Type.VOD;
             break;
-          case KalturaMediaEntry.EntryType.LIVE_STREAM.value:
-          case KalturaMediaEntry.EntryType.LIVE_CHANNEL.value:
+          case KontorolMediaEntry.EntryType.LIVE_STREAM.value:
+          case KontorolMediaEntry.EntryType.LIVE_CHANNEL.value:
             type = MediaEntry.Type.LIVE;
             break;
           default:
@@ -81,7 +81,7 @@ export default class OVPProviderParser extends BaseProviderParser {
   /**
    * Returns the parsed sources
    * @function _getParsedSources
-   * @param {Array<KalturaPlaybackSource>} kalturaSources - The kaltura sources
+   * @param {Array<KontorolPlaybackSource>} kontorolSources - The kontorol sources
    * @param {string} ks - The ks
    * @param {number} partnerId - The partner ID
    * @param {number} uiConfId - The uiConf ID
@@ -91,21 +91,21 @@ export default class OVPProviderParser extends BaseProviderParser {
    * @static
    * @private
    */
-  static _getParsedSources(kalturaSources: Array<KalturaPlaybackSource>, ks: string, partnerId: number, uiConfId: ?number, entry: Object, playbackContext: Object): MediaSources {
+  static _getParsedSources(kontorolSources: Array<KontorolPlaybackSource>, ks: string, partnerId: number, uiConfId: ?number, entry: Object, playbackContext: Object): MediaSources {
     const sources = new MediaSources();
-    const addAdaptiveSource = (source: KalturaPlaybackSource) => {
+    const addAdaptiveSource = (source: KontorolPlaybackSource) => {
       const parsedSource = OVPProviderParser._parseAdaptiveSource(source, playbackContext.flavorAssets, ks, partnerId, uiConfId, entry.id);
       const sourceFormat = SupportedStreamFormat.get(source.format);
       sources.map(parsedSource, sourceFormat);
     };
     const parseAdaptiveSources = () => {
-      kalturaSources.filter((source) => !OVPProviderParser._isProgressiveSource(source)).forEach(addAdaptiveSource);
+      kontorolSources.filter((source) => !OVPProviderParser._isProgressiveSource(source)).forEach(addAdaptiveSource);
     };
     const parseProgressiveSources = () => {
-      const progressiveSource = kalturaSources.find(OVPProviderParser._isProgressiveSource);
+      const progressiveSource = kontorolSources.find(OVPProviderParser._isProgressiveSource);
       sources.progressive = OVPProviderParser._parseProgressiveSources(progressiveSource, playbackContext.flavorAssets, ks, partnerId, uiConfId, entry.id);
     };
-    if (kalturaSources && kalturaSources.length > 0) {
+    if (kontorolSources && kontorolSources.length > 0) {
       parseAdaptiveSources();
       parseProgressiveSources();
     }
@@ -115,54 +115,54 @@ export default class OVPProviderParser extends BaseProviderParser {
   /**
    * Returns a parsed adaptive source
    * @function _parseAdaptiveSource
-   * @param {KalturaPlaybackSource} kalturaSource - A kaltura source
-   * @param {Array<KalturaFlavorAsset>} flavorAssets - The flavor Assets of the kaltura source
+   * @param {KontorolPlaybackSource} kontorolSource - A kontorol source
+   * @param {Array<KontorolFlavorAsset>} flavorAssets - The flavor Assets of the kontorol source
    * @param {string} ks - The ks
    * @param {number} partnerId - The partner ID
    * @param {number} uiConfId - The uiConf ID
    * @param {string} entryId - The entry id
-   * @returns {MediaSource} - The parsed adaptive kalturaSource
+   * @returns {MediaSource} - The parsed adaptive kontorolSource
    * @static
    * @private
    */
-  static _parseAdaptiveSource(kalturaSource: ?KalturaPlaybackSource, flavorAssets: Array<KalturaFlavorAsset>, ks: string, partnerId: number, uiConfId: ?number, entryId: string): MediaSource {
+  static _parseAdaptiveSource(kontorolSource: ?KontorolPlaybackSource, flavorAssets: Array<KontorolFlavorAsset>, ks: string, partnerId: number, uiConfId: ?number, entryId: string): MediaSource {
     const mediaSource: MediaSource = new MediaSource();
-    if (kalturaSource) {
+    if (kontorolSource) {
       let playUrl: string = "";
-      const mediaFormat = SupportedStreamFormat.get(kalturaSource.format);
+      const mediaFormat = SupportedStreamFormat.get(kontorolSource.format);
       let extension: string = "";
       if (mediaFormat) {
         extension = mediaFormat.pathExt;
         mediaSource.mimetype = mediaFormat.mimeType;
       }
       // in case playbackSource doesn't have flavors we don't need to build the url and we'll use the provided one.
-      if (kalturaSource.hasFlavorIds()) {
+      if (kontorolSource.hasFlavorIds()) {
         if (!extension && flavorAssets && flavorAssets.length > 0) {
           extension = flavorAssets[0].fileExt;
         }
         playUrl = PlaySourceUrlBuilder.build({
           entryId: entryId,
-          flavorIds: kalturaSource.flavorIds,
-          format: kalturaSource.format,
+          flavorIds: kontorolSource.flavorIds,
+          format: kontorolSource.format,
           ks: ks,
           partnerId: partnerId,
           uiConfId: uiConfId,
           extension: extension,
-          protocol: kalturaSource.getProtocol(this._getBaseProtocol())
+          protocol: kontorolSource.getProtocol(this._getBaseProtocol())
         });
       } else {
-        playUrl = kalturaSource.url;
+        playUrl = kontorolSource.url;
       }
       if (playUrl === "") {
-        OVPProviderParser._logger.error(`failed to create play url from source, discarding source: (${entryId}_${kalturaSource.deliveryProfileId}), ${kalturaSource.format}.`);
+        OVPProviderParser._logger.error(`failed to create play url from source, discarding source: (${entryId}_${kontorolSource.deliveryProfileId}), ${kontorolSource.format}.`);
         return mediaSource;
       }
       mediaSource.url = playUrl;
-      mediaSource.id = entryId + "_" + kalturaSource.deliveryProfileId + "," + kalturaSource.format;
-      if (kalturaSource.hasDrmData()) {
+      mediaSource.id = entryId + "_" + kontorolSource.deliveryProfileId + "," + kontorolSource.format;
+      if (kontorolSource.hasDrmData()) {
         const drmParams: Array<Drm> = [];
-        kalturaSource.drm.forEach((drm) => {
-          drmParams.push(new Drm(drm.licenseURL, KalturaDrmPlaybackPluginData.Scheme[drm.scheme], drm.certificate));
+        kontorolSource.drm.forEach((drm) => {
+          drmParams.push(new Drm(drm.licenseURL, KontorolDrmPlaybackPluginData.Scheme[drm.scheme], drm.certificate));
         });
         mediaSource.drmData = drmParams;
       }
@@ -173,23 +173,23 @@ export default class OVPProviderParser extends BaseProviderParser {
   /**
    * Returns parsed progressive sources
    * @function _parseProgressiveSources
-   * @param {KalturaPlaybackSource} kalturaSource - A kaltura source
-   * @param {Array<KalturaFlavorAsset>} flavorAssets - The flavor Assets of the kaltura source
+   * @param {KontorolPlaybackSource} kontorolSource - A kontorol source
+   * @param {Array<KontorolFlavorAsset>} flavorAssets - The flavor Assets of the kontorol source
    * @param {string} ks - The ks
    * @param {number} partnerId - The partner ID
    * @param {number} uiConfId - The uiConf ID
    * @param {string} entryId - The entry id
-   * @returns {Array<MediaSource>} - The parsed progressive kalturaSources
+   * @returns {Array<MediaSource>} - The parsed progressive kontorolSources
    * @static
    * @private
    */
-  static _parseProgressiveSources(kalturaSource: ?KalturaPlaybackSource, flavorAssets: Array<KalturaFlavorAsset>, ks: string, partnerId: number, uiConfId: ?number, entryId: string): Array<MediaSource> {
+  static _parseProgressiveSources(kontorolSource: ?KontorolPlaybackSource, flavorAssets: Array<KontorolFlavorAsset>, ks: string, partnerId: number, uiConfId: ?number, entryId: string): Array<MediaSource> {
     const videoSources: Array<MediaSource> = [];
     const audioSources: Array<MediaSource> = [];
-    if (kalturaSource) {
-      const protocol = kalturaSource.getProtocol(this._getBaseProtocol());
-      const format = kalturaSource.format;
-      const sourceId = kalturaSource.deliveryProfileId + "," + kalturaSource.format;
+    if (kontorolSource) {
+      const protocol = kontorolSource.getProtocol(this._getBaseProtocol());
+      const format = kontorolSource.format;
+      const sourceId = kontorolSource.deliveryProfileId + "," + kontorolSource.format;
       flavorAssets.map((flavor) => {
         const mediaSource: MediaSource = new MediaSource();
         mediaSource.id = flavor.id + sourceId;
@@ -222,12 +222,12 @@ export default class OVPProviderParser extends BaseProviderParser {
   /**
    * Ovp metadata parser
    * @function _parseMetaData
-   * @param {KalturaMetadataListResponse} metadataList The metadata list
+   * @param {KontorolMetadataListResponse} metadataList The metadata list
    * @returns {Object} Parsed metadata
    * @static
    * @private
    */
-  static _parseMetadata(metadataList: KalturaMetadataListResponse): Object {
+  static _parseMetadata(metadataList: KontorolMetadataListResponse): Object {
     const metadata = {};
     if (metadataList && metadataList.metas && metadataList.metas.length > 0) {
       metadataList.metas.forEach((meta) => {

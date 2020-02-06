@@ -1,6 +1,6 @@
 //@flow
 import OVPUIConfService from '../services/ui-conf-service'
-import KalturaUIConfResponse from '../response-types/kaltura-ui-conf-response'
+import KontorolUIConfResponse from '../response-types/kontorol-ui-conf-response'
 import OVPConfiguration from '../config'
 import RequestBuilder from '../../../util/request-builder'
 
@@ -22,7 +22,7 @@ export default class OVPUIConfigLoader implements ILoader {
   }
 
   set response(response: any) {
-    this._response.uiConf = new KalturaUIConfResponse(response[0].data);
+    this._response.uiConf = new KontorolUIConfResponse(response[0].data);
   }
 
   get response(): any {

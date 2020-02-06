@@ -72,8 +72,8 @@ Object.assign(providersConfig.entry, {
 });
 
 Object.assign(providersConfig.output, {
-  filename: "playkit-[name]-provider.js",
-  library: ["playkit", "providers", "[name]"]
+  filename: "pakhshkit-[name]-provider.js",
+  library: ["pakhshkit", "providers", "[name]"]
 });
 
 Object.assign(servicesConfig.entry, {
@@ -83,8 +83,8 @@ Object.assign(servicesConfig.entry, {
 });
 
 Object.assign(servicesConfig.output, {
-  filename: "playkit-[name]-service.js",
-  library: ["playkit", "services", "[name]"]
+  filename: "pakhshkit-[name]-service.js",
+  library: ["pakhshkit", "services", "[name]"]
 });
 
 module.exports = [providersConfig, servicesConfig];
